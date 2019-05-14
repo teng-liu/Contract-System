@@ -15,12 +15,10 @@ class App extends Component {
     "body": {
         "clauses": [
             {
-                  "id": "23432",
                 "type": "title/1",
                 "field": "{$agreement-name}"
             },
             {
-                 "id": "23432",
                 "type": "body/begining",
                 "field": [
                     {
@@ -63,12 +61,14 @@ class App extends Component {
 
   render(){
     return (
-      <div className="App">
-        <header className="App-header">
-          <p>Contract Management System</p>
-          <TemplateHeader lines={this.state.body.clauses[1].field}/>
-        </header>
-      </div>
+    <div>
+        <div className="App-header">
+            <p>Contract Management System</p>
+        </div>
+        <div>
+            <TemplateHeader lines={this.state.body}/>
+        </div>
+    </div>
     );
   }
 }
