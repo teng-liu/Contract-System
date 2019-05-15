@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import logo from './logo.PNG';
 import './App.css';
 import TemplateHeader from './components/TemplateHeader';
+import ExampleComponent from './components/exampleAction';
 import Store from './store';
 
 class App extends Component {
@@ -10,11 +11,7 @@ class App extends Component {
         super(props);
         this.store = new Store();        // define store first, outside class ??
         this.store.redux.subscribe(() => this.onStateChange());     // subscribe -> addListener
-        this.state = {};
-    }
-
-    componentDidMount() {
-        let fakeState = {
+        this.state = {
             "head": {
                 "id": "contract-template-itss",
                 "code": "contract-template-itss",
@@ -65,12 +62,32 @@ class App extends Component {
                         "field": "In this Agreement, the following definitions apply: {$definitions}"
                     }
                 ]
+            },};
+    }
+
+    componentDidMount() {
+        let s = {
+            "data": {
+                "selected": 1,
+                "users": [
+                    {"id": 1, "firstName": "Smith", "lastName": "Lee"},
+                    {"id": 2, "firstName": "Lucy", "lastName": "Huang"}
+                ]
             }
+
         };      // end of state
+
+        // let state1 = {
+        //     selected: 1,
+        //     users: [
+        //         {id: 1, firstName: "Smith", lastName: "Lee"},
+        //         {id: 2, firstName: "Lucy", lastName: "Huang"}
+        //     ]
+        // }
 
         let action = {
             type: "reset",
-            parameters: { state: fakeState }
+            parameters: { state: s.data }
         }
         this.store.redux.dispatch(action);      // redux accept this action
 
@@ -84,6 +101,17 @@ class App extends Component {
         this.setState({data: s});       // data -> state.data stores all the state
     }
   
+    onEvent(e) {
+        if(e.type === 'user-selected'){
+            let action = {
+                type: 'select-user',
+                parameters: {
+                    id: e.parameters.id
+                }
+            }
+            this.store.redux.dispatch(action);
+        }
+    }
     
     render(){
         return (
@@ -93,6 +121,12 @@ class App extends Component {
             </div>
             <div>
                 <TemplateHeader lines={this.state.body}/>
+            </div>
+            <div>
+                <h1>React, Redux example</h1>
+                <ExampleComponent 
+                    data={this.state.data} 
+                    onEvent={(e)=>this.onEvent(e)} />
             </div>
         </div>
         );
