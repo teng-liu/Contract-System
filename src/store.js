@@ -1,0 +1,24 @@
+import React, { Component } from 'react'
+import * as Redux from 'redux'
+import rootReducer from './reducers/root'
+import apiMiddleware from './middlewares/api'
+import * as types from '../types'
+
+// redux ? local? | initState as parameter, why not ?
+
+let redux;
+
+class Store {
+    constructor() {
+        this.redux = Redux.createStore(
+            rootReducer,
+            compose(
+                Redux.applyMiddleware(apiMiddleware),
+                window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+            )
+        )
+    }
+
+}
+
+export default Store;
