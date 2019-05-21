@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import { restElement } from '@babel/types';
-import { notEqual } from 'assert';
+import React, { Component } from 'react';
+// import { restElement } from '@babel/types';
+// import { notEqual } from 'assert';
 
 class TemplateHeader extends Component {
 
@@ -29,7 +29,6 @@ class TemplateHeader extends Component {
             }
             return result;
         });
-    
     
         return (
             <div>

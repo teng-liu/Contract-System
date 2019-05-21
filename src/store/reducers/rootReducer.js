@@ -15,6 +15,7 @@ export default function rootReducer(old, action) {
                 })
         }               // copy old to {}, a new object, then update {selected: ...}
 
+
         return old;
     }
     else{               // if old is null, then return empty object {}

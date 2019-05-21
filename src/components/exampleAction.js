@@ -14,6 +14,7 @@ export default class ExampleComponent extends Component {
 
     render() {
         let data = this.props.data;
+        console.log("line17-------exampleAction");
         console.log(data);
         let items;
         if(data) {
