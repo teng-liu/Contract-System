@@ -7,12 +7,15 @@ export default function rootReducer(old, action) {
             return action.parameters.state;  
         }
         else if(action.type === 'select-user'){
-            return Object.assign(
-                {}, 
-                old,
-                {
-                    selected: action.parameters.id
-                })
+            let re = Object.assign({}, old);
+            re.data.selected = action.parameters.id;
+            return re;
+            // return Object.assign(
+            //     {}, 
+            //     old,
+            //     {
+            //         selected: action.parameters.id
+            //     })
         }               // copy old to {}, a new object, then update {selected: ...}
 
 

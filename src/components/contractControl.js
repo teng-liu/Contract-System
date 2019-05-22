@@ -18,10 +18,6 @@ export default class ContractControl extends Component {
      }
     
 
-
-
-
-
     render() {
         let roles = this.props.roles;
         let contractAuthor;

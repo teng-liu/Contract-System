@@ -5,7 +5,6 @@ import apiMiddleware from './store/middlewares/api'
 
 // redux ? local? | initState as parameter, why not ?
 
-let redux;
 
 class Store {
     constructor() {
