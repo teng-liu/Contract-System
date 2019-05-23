@@ -2,36 +2,55 @@ import React from 'react';
 import * as Redux from 'redux'
 import axios from 'axios';
 
-async function callApi(parameters) {
+async function callApi(method, url, body) {
     let res = await axios({
-        method: 'get',
-        url: 'some-api'
+        method,
+        url
     })
     return res
+}
+
+async function processSyncFunction(action) {
+    if (action.type === 'GetControlSheet') {
+        return await callApi('get', 'http://localhost:5000/api/controlsheet', null);
+    }
+    else if(action.type === 'saveContractI'){
+        return await callApi('post', 'http://localhost:5000/api/controlsheet/', null);
+    }
+    else {
+        throw 'no such action type'
+    }
 }
 
 let apiMiddleware = (api) => (next) => (action) => {
     if(action.kind === 'api' 
         && action.status === 'new') {
             // call api as promise
-            callApi(action.parameters)
+            processSyncFunction(action)
                 .then(
                     response => {
                         // re-dispatch succeeded action
-                        api.dispatch(Object.assign({}, action, {
-                            status: 'succeeded',
-                            response: response
-                        }))})
+                        api.dispatch(
+                            {
+                                ...action,
+                                status: 'succeeded',
+                                response: response
+                            }
+                        )
+                    })
                 .catch(
                     error => {
                         // re-dispatch the failed action
-                        api.dispatch(Object.assign({}, action, {
-                            status: 'failed',
-                            error: error
-                        }))
-                });
+                        api.dispatch(
+                            {
+                                ...action,
+                                status: 'failed',
+                                error: error
+                            })
+                    }
+                );
             // forward the pending action
-            return next(Object.assign({}, action, {status: 'pending'}));     
+            return next({...action, status: 'pending'});     
         }
         else {
             // forward the action

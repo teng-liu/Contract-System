@@ -17,7 +17,14 @@ export default function rootReducer(old, action) {
             //         selected: action.parameters.id
             //     })
         }               // copy old to {}, a new object, then update {selected: ...}
-
+        else if (action.type === 'GetControlSheet') {
+            if (action.status === 'succeeded') {
+                return {
+                    ...old,
+                    data: action.response.data
+                }
+            }
+        }
 
         return old;
     }

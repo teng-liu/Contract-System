@@ -61,7 +61,7 @@ export default class ContractControl extends Component {
                 // multipleselection
                 if(varType === "textinput"){
                     return (
-                        <div key={item.code}>
+                        <div key={item.code} style={formStyleA}>
                             <label>{partI}
                                 <input type="text" name={varName} placeholder={varNote}></input>
                             </label>
@@ -71,7 +71,7 @@ export default class ContractControl extends Component {
                 }
                 else if(varType === "textarea"){
                     return (
-                        <div>
+                        <div style={formStyleA}>
                             <label>{partI}
                                 <br />
                                 <textarea name={varName} placeholder={varNote}>
@@ -83,7 +83,7 @@ export default class ContractControl extends Component {
                 }
                 else if(varType === "checkbox"){
                     return (
-                        <div>
+                        <div style={formStyleA}>
                             <label>{partI}
                                 <input type="checkbox" name={varName} />
                             </label>
@@ -92,7 +92,7 @@ export default class ContractControl extends Component {
                 }
                 else if(varType === "calander"){
                     return (
-                        <div>
+                        <div style={formStyleA}>
                             <label>{partI}
                                 <input type="date" name={varName}></input>
                             </label>
@@ -104,7 +104,7 @@ export default class ContractControl extends Component {
                     let values = varNote.split(",");
 
                     return (
-                        <div>
+                        <div style={formStyleA}>
                             <label>{partI}
                                 {this.buildRadioButtons(values, "radio", varName)}
                             </label>
@@ -133,10 +133,19 @@ export default class ContractControl extends Component {
         }
 
         return (
-            <div>
+            <div style={formStyleB}>
                 {items}
             </div>
         )
 
     }
 }
+
+const formStyleA = {
+    padding: '5px 10px'
+  };
+
+const formStyleB = {
+    backgroundColor: '#f2f5f9',
+    padding: '5px 10px'
+  };

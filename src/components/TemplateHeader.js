@@ -33,22 +33,26 @@ class TemplateHeader extends Component {
         return (
             <div>
                 {titleitem}
-                <form name="formGeneral0" onSubmit={this.onSubmit} >
-                    <input type="submit" 
-                            value="Submit" 
-                            className="btn"></input>
-                    {items}
-                </form>
+                <input type="submit" 
+                        value="Submit" 
+                        className="btn" onClick={this.onSubmit()}>
+                </input>
+                {items}
             </div>
         );
       }
 
 
 
-      onSubmit = (e) => {
-        e.preventDefault();
-        // this.formGeneral0.
-        console.log(this.state);
+      onSubmit() {
+        if(this.props.onEvent){
+            this.props.onEvent({
+                type: 'submitContractI',
+                parameters: {
+
+                }
+            });
+        }
       }
 
       onChange = (e) => {
@@ -163,7 +167,7 @@ class TemplateHeader extends Component {
             <div style={formStyleB}>
                 <label>{strAnd}</label>
                 <input type="text" 
-                        name="$party-b-department" 
+                        name="party-b-department" 
                         onChange={this.onChange}></input>
                 <label>{str2}</label>
                 <input type="text" 
@@ -173,12 +177,12 @@ class TemplateHeader extends Component {
                 <input type="text" 
                         name="party-b-county" 
                         onChange={this.onChange} 
-                        placeholder="$party-b-county"></input>
+                        placeholder="party-b-county"></input>
                 <label>{str4}</label>
                 <input type="text" 
                         name="party-b-province" 
                         onChange={this.onChange} 
-                        placeholder="$party-b-province"></input>
+                        placeholder="party-b-province"></input>
                 <div>
                     <label>{lineNote}</label>
                 </div>
