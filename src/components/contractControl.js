@@ -17,7 +17,6 @@ export default class ContractControl extends Component {
       })
      }
     
-
     render() {
         let roles = this.props.roles;
         let contractAuthor;
@@ -29,23 +28,16 @@ export default class ContractControl extends Component {
             });
         }
         
-        console.log(contractAuthor);
-
         let items;
         if(contractAuthor){
             items = contractAuthor.map((item, i) => {
 
                 // analysis the item, convert to corresponding component
-                console.log(item);
-
                 let i1 =  item.field.indexOf("$[");
                 let partI =  item.field.slice(0, i1);
                 let i2 =  item.field.indexOf("]");
                 let vars =  item.field.slice(i1+2, i2);
                 let partII = item.field.slice(i2+1);
-                console.log(partI);
-                console.log(vars);
-                console.log(partII);
 
                 // analysis the vars   var-name::type::display
                 let varInfor = vars.split("::");
@@ -53,12 +45,6 @@ export default class ContractControl extends Component {
                 let varType = varInfor[1];
                 let varNote = varInfor[2];
 
-                // textinput
-                // textarea
-                // checkbox
-                // calander
-                // singleselection
-                // multipleselection
                 if(varType === "textinput"){
                     return (
                         <div key={item.code} style={formStyleA}>
@@ -117,18 +103,6 @@ export default class ContractControl extends Component {
                 else{
 
                 }
-
-               // {item.field}
-
-                // return (
-                //     <div key={item.code}>
-                //         <div>{partI}</div>
-                //         <div>{vars}</div>
-                //         <div>{partII}</div>
-                //     </div>
-                // )
-
-
             })
         }
 
@@ -146,6 +120,7 @@ const formStyleA = {
   };
 
 const formStyleB = {
-    backgroundColor: '#f2f5f9',
-    padding: '5px 10px'
+    backgroundColor: '#7b7e82',
+    padding: '5px 10px',
+    color: '#fff'
   };

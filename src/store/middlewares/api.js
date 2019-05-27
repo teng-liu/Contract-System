@@ -12,10 +12,16 @@ async function callApi(method, url, body) {
 
 async function processSyncFunction(action) {
     if (action.type === 'GetControlSheet') {
-        return await callApi('get', 'http://localhost:5000/api/controlsheet', null);
+        // return await callApi('get', 'http://localhost:5000/api/controlsheet', null);
+        return await callApi('get', 'http://localhost:9000/api/contract', null);
+        //  http://localhost:9000/api/contract
     }
     else if(action.type === 'saveContractI'){
         return await callApi('post', 'http://localhost:5000/api/controlsheet/', null);
+    }
+    else if(action.type === 'select-user'){
+        // update 
+        return await callApi('put', 'http://localhost:9000/api/contract', null);
     }
     else {
         throw 'no such action type'

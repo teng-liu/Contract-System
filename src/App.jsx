@@ -4,7 +4,6 @@ import TemplateHeader from './components/TemplateHeader';
 import ExampleComponent from './components/exampleAction';
 import Store from './store';
 import ContractControl from './components/contractControl';
-import axios from 'axios';
 
 class App extends Component {
 
@@ -17,54 +16,24 @@ class App extends Component {
     }
 
     componentDidMount() {
-
-        this.store.redux.dispatch({
+        let action = {
             type: 'GetControlSheet',
             kind: 'api',
             status: 'new'
-        })
-        // post:    parameters
+        }
 
-        // axios.get('http://localhost:5000/api/controlsheet')
-        // .then(res => {
-        //     console.log('-----response----');
-        //     console.log(res.data);
-        //     this.setState({data: res.data})
-        //     // this.state = { 'data': res.data};
-        // })
-        
-        console.log(this.state.data);
+        // let action = {
+        //     type: "reset",
+        //     parameters: { state: s.data }
+        // }
+
+        this.store.redux.dispatch(action)        // redux accept this action
     }
-
-    /**
-    componentDidMount() {        let s = {
-            "data": {}
-        };      // end of state.data
-
-        let controlData = {
-            "roles": []
-        };
-
-        let action = {
-            type: "reset",
-            parameters: { state: s.data }
-        }
-
-        let action = {
-            type: "reset",
-            parameters: { state: controlData.roles }
-        }
-
-        this.store.redux.dispatch(action);      // redux accept this action
-
-
-    } // end of componentDidMount
- */
 
     /** Everytime state changed, setState() called */
     onStateChange() {
         let s = this.store.redux.getState();
-        this.setState({data: s.data});       // data -> state.data stores all the state
+        this.setState({data: s.data});          // data -> state.data stores all the state
     }
   
     onEvent(e) {
