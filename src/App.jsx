@@ -5,6 +5,7 @@ import ExampleComponent from './components/exampleAction';
 import Store from './store';
 import ContractControl from './components/contractControl';
 
+
 class App extends Component {
 
     constructor(props){
@@ -37,9 +38,12 @@ class App extends Component {
     }
   
     onEvent(e) {
+        console.log(e.parameters);
         if(e.type === 'user-selected'){
             let action = {
                 type: 'select-user',
+                kind: 'api',
+                status: 'new',
                 parameters: {
                     id: e.parameters.id
                 }

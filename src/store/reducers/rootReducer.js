@@ -7,13 +7,21 @@ export default function rootReducer(old, action) {
             return action.parameters.state;  
         }
         else if(action.type === 'select-user'){
-            // let re = Object.assign({}, old);
-            // re.data.selected = action.parameters.id;
-            // return re;
 
-            return {
-                ...old,
-                data: action.response.data.content.users
+            if (action.status === 'succeeded') {
+
+                // shallow copy of every level:
+                // https://redux.js.org/recipes/structuring-reducers/immutable-update-patterns
+                return {
+                    ...old,
+                    data: {
+                        ...old.data,
+                        data: {
+                            ...old.data.data,
+                            selected: action.response.data.selected
+                        }
+                    }
+                }
             }
         }
         else if (action.type === 'GetControlSheet') {
