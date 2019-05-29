@@ -4,7 +4,8 @@ import TemplateHeader from './components/TemplateHeader';
 import ExampleComponent from './components/exampleAction';
 import Store from './store';
 import ContractControl from './components/contractControl';
-
+import TemplateList from './components/templateList';
+import Template from './components/template';
 
 class App extends Component {
 
@@ -12,21 +13,51 @@ class App extends Component {
         super(props);
         this.store = new Store();        // define store first, outside class ??
         this.store.redux.subscribe(() => this.onStateChange());     // subscribe -> addListener
-        this.state = {};
-
+        this.state = {
+            localdb: {
+                current: "", 
+                data: {
+                    templates:[],
+                    contracts:[]
+                }
+            }
+        }
     }
 
+        /**
+         * state => {
+         * 
+         * current: "",
+         * data: {
+         *      templates: {},
+         *      contacts: {}
+         * }
+         * }
+         */
+
+
+
+    
+
     componentDidMount() {
-        let action = {
-            type: 'GetControlSheet',
-            kind: 'api',
-            status: 'new'
-        }
+
+        // let action = {
+        //     type: 'GetControlSheet',
+        //     kind: 'api',
+        //     status: 'new'
+        // }
 
         // let action = {
         //     type: "reset",
         //     parameters: { state: s.data }
         // }
+
+        // call api get Templat
+        let action = {
+            type: 'GetTemplateList',
+            kind: 'api',
+            status: 'new'
+        }
 
         this.store.redux.dispatch(action)        // redux accept this action
     }
@@ -34,7 +65,9 @@ class App extends Component {
     /** Everytime state changed, setState() called */
     onStateChange() {
         let s = this.store.redux.getState();
-        this.setState({data: s.data});          // data -> state.data stores all the state
+        console.log(s);
+        this.setState({localdb: s.localdb});
+        console.log(this.state);
     }
   
     onEvent(e) {
@@ -53,16 +86,25 @@ class App extends Component {
         else if(e.type === 'submitContractI'){
             
         }
+        else if(e.type === 'setCurrentTemplate'){
+            let action = {
+                type: "SetCurrentTemp",
+                parameters: e.parameters
+            }
+            this.store.redux.dispatch(action);
+
+        }
     }
-    
+
     render(){
-        if (this.state.data) {
+        if (this.state) {
             return (
                 <div>
                     <div className="App-header">
-                        <p>Contract Management System</p>
+                        <h1>Contract Management System</h1>
                     </div>
-                    <div>
+
+                    {/* <div>
                         <TemplateHeader lines={this.state.data.body}/>
                     </div>
                     <div>
@@ -74,12 +116,27 @@ class App extends Component {
                     <div>
                         <h1>IT SHARED SERVICES CONTRACT/AGREEMENT APPROVAL</h1>
                         <ContractControl roles={this.state.data.roles}/>
+                    </div> */}
+
+                    <div>
+                        <h1>Contract Template List</h1>
+                    </div>
+                    <div>
+                        <TemplateList 
+                            onEvent={(e)=>this.onEvent(e)} 
+                            current={this.state.localdb.current} 
+                            templateList={this.state.localdb.data.templates}/>
+                    </div>
+                    <div>
+                        <Template template={this.state.localdb.current}/>
                     </div>
                 </div>
                 )        
         }
-        else {
-            return (<div />)
+        else { 
+            return (
+            <div>
+            </div>)
         }
     }
 }

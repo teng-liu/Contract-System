@@ -33,10 +33,45 @@ export default function rootReducer(old, action) {
                 }
             }
         }
+        else if(action.type === 'GetTemplateList'){
+            if(action.status === 'succeeded'){
+                console.log(action.response.data.contract_template);
+                return {
+                    ...old,
+                    localdb: {
+                        ...old.localdb,
+                        data: {
+                            ...old.localdb.data,
+                            templates: action.response.data.contract_template
+                        }
+                    }
+                }
+            }
+        }
+        else if(action.type === 'SetCurrentTemp'){
+            return {
+                ...old,
+                localdb: {
+                    ...old.localdb,
+                    current: action.parameters
+                }
+                
+            };
+            
+        }
 
         return old;
     }
     else{               // if old is null, then return empty object {}
-        return {}   
+        return {
+            localdb: {
+                current: "", 
+                data: {
+                    templates:[],
+                    contracts:[]
+                }}
+            }
+
+
     }
 }

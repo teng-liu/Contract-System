@@ -22,6 +22,10 @@ async function processSyncFunction(action) {
         return await callApi('get', 'http://localhost:9000/api/contracts', null);
         //  http://localhost:9000/api/contract
     }
+    else if(action.type === 'GetTemplateList'){
+        return await callApi('get', 'http://localhost:9000/api/contract-templates', null);
+    }
+
     else if(action.type === 'saveContractI'){
         return await callApi('post', 'http://localhost:5000/api/controlsheet/', null);
     }
