@@ -17,17 +17,21 @@ async function callApi(method, url, body) {
 }
 
 async function processSyncFunction(action) {
-    if (action.type === 'GetControlSheet') {
-        // return await callApi('get', 'http://localhost:5000/api/controlsheet', null);
+    if (action.type === 'GetContractList') {
         return await callApi('get', 'http://localhost:9000/api/contracts', null);
-        //  http://localhost:9000/api/contract
     }
     else if(action.type === 'GetTemplateList'){
         return await callApi('get', 'http://localhost:9000/api/contract-templates', null);
     }
+    else if(action.type === 'GetContractBykey'){
+        let key = action.parameters.id;
+        return await callApi('get', `http://localhost:9000/api/contracts/${key}`, null);
+    }
+    else if(action.type === 'UpsertContractByKey'){
+         let key = action.parameters.id;
+        // state -> currentContract -> namekey, content
 
-    else if(action.type === 'saveContractI'){
-        return await callApi('post', 'http://localhost:5000/api/controlsheet/', null);
+        // return await callApi('put', `http://localhost:9000/api/contracts/${key}`, action.parameters.content);
     }
     else if(action.type === 'select-user'){
         // update 

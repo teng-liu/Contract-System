@@ -15,10 +15,18 @@ class App extends Component {
         this.store.redux.subscribe(() => this.onStateChange());     // subscribe -> addListener
         this.state = {
             localdb: {
-                current: "", 
+                currentTemplate: "", 
                 data: {
                     templates:[],
                     contracts:[]
+                },
+                currentContract: {
+                    uuid: "",
+                    nameKey: "",
+                    content: {
+                        head: {},
+                        body: {}
+                    }
                 }
             }
         }
@@ -41,18 +49,7 @@ class App extends Component {
 
     componentDidMount() {
 
-        // let action = {
-        //     type: 'GetControlSheet',
-        //     kind: 'api',
-        //     status: 'new'
-        // }
-
-        // let action = {
-        //     type: "reset",
-        //     parameters: { state: s.data }
-        // }
-
-        // call api get Templat
+        // call api get Template
         let action = {
             type: 'GetTemplateList',
             kind: 'api',
@@ -65,13 +62,11 @@ class App extends Component {
     /** Everytime state changed, setState() called */
     onStateChange() {
         let s = this.store.redux.getState();
-        console.log(s);
         this.setState({localdb: s.localdb});
-        console.log(this.state);
     }
   
     onEvent(e) {
-        console.log(e.parameters);
+        console.log(e.type);
         if(e.type === 'user-selected'){
             let action = {
                 type: 'select-user',
@@ -83,8 +78,27 @@ class App extends Component {
             }
             this.store.redux.dispatch(action);
         }
-        else if(e.type === 'submitContractI'){
+        else if(e.type === 'setContractProperty'){
+            console.log(e.parameters);
             
+            let action = {
+                type: 'UpdateContractAttribute',
+                parameters: e.parameters
+            }
+            this.store.redux.dispatch(action);
+
+            // parameters: {
+            //     key: "vendor-name",
+            //     value: "delta"
+            // }
+        }
+        else if(e.type === 'saveContract'){
+            let action = {
+                type: 'UpsertContractByKey',
+                kind: 'api',
+                status: 'new'
+            }
+            this.store.redux.dispatch(action);
         }
         else if(e.type === 'setCurrentTemplate'){
             let action = {
@@ -92,8 +106,8 @@ class App extends Component {
                 parameters: e.parameters
             }
             this.store.redux.dispatch(action);
-
         }
+
     }
 
     render(){
@@ -124,11 +138,12 @@ class App extends Component {
                     <div>
                         <TemplateList 
                             onEvent={(e)=>this.onEvent(e)} 
-                            current={this.state.localdb.current} 
                             templateList={this.state.localdb.data.templates}/>
                     </div>
                     <div>
-                        <Template template={this.state.localdb.current}/>
+                        <Template 
+                            onEvent={(e)=>this.onEvent(e)} 
+                            template={this.state.localdb.currentTemplate}/>
                     </div>
                 </div>
                 )        

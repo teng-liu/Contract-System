@@ -1,10 +1,95 @@
-import React from 'react'
 
 export default function rootReducer(old, action) {
 
     if(old){
         if(action.type === 'reset'){
             return action.parameters.state;  
+        }
+        else if (action.type === 'GetContractList') {       // get all contracts - list
+            if (action.status === 'succeeded') {
+                return {
+                    ...old,
+                    localdb: {
+                        ...old.localdb,
+                        data: {
+                            ...old.localdb.data,
+                            contracts: action.response.data.contract
+                        }
+                    }
+                }
+            }
+        }
+        else if(action.type === 'GetTemplateList'){
+            if(action.status === 'succeeded'){
+                console.log(action.response.data.contract_template);
+                return {
+                    ...old,
+                    localdb: {
+                        ...old.localdb,
+                        data: {
+                            ...old.localdb.data,
+                            templates: action.response.data.contract_template
+                        }
+                    }
+                }
+            }
+        }
+        else if(action.type === 'UpsertContractByKey') {
+            // insert or update contract by key
+            if(action.status === 'succeeded'){
+                return old;
+            }
+        }
+        else if(action.type === 'SetCurrentTemp'){
+            return {
+                ...old,
+                localdb: {
+                    ...old.localdb,
+                    currentTemplate: action.parameters
+                }
+                
+            };
+        }
+        else if(action.type === 'UpdateContractAttribute'){     // update contract -> attributes, name, template-key
+            if(action.parameters.key === 'contractName'){
+                return {
+                    ...old,
+                    localdb: {
+                        ...old.localdb,
+                        currentContract: {
+                            ...old.localdb.currentContract,
+                            content: {
+                                ...old.localdb.currentContract.content,
+                                head: {
+                                    ...old.localdb.currentContract.content.head,
+                                    code: action.parameters.value,
+                                    'template-key': old.localdb.currentTemplate.id
+                                }
+                            },
+                            nameKey: action.parameters.value
+                        }
+                    }
+                }
+            }
+            else{
+                return {
+                    ...old,
+                    localdb: {
+                        ...old.localdb,
+                        currentContract: {
+                            ...old.localdb.currentContract,
+                            content: {
+                                ...old.localdb.currentContract.content,
+                                body: {
+                                    ...old.localdb.currentContract.content.body,
+                                    [action.parameters.key]: action.parameters.value
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
         }
         else if(action.type === 'select-user'){
 
@@ -24,53 +109,29 @@ export default function rootReducer(old, action) {
                 }
             }
         }
-        else if (action.type === 'GetControlSheet') {
-            if (action.status === 'succeeded') {
-                // console.log(action.response.data.content);
-                return {
-                    ...old,
-                    data: action.response.data.content
-                }
-            }
-        }
-        else if(action.type === 'GetTemplateList'){
-            if(action.status === 'succeeded'){
-                console.log(action.response.data.contract_template);
-                return {
-                    ...old,
-                    localdb: {
-                        ...old.localdb,
-                        data: {
-                            ...old.localdb.data,
-                            templates: action.response.data.contract_template
-                        }
-                    }
-                }
-            }
-        }
-        else if(action.type === 'SetCurrentTemp'){
-            return {
-                ...old,
-                localdb: {
-                    ...old.localdb,
-                    current: action.parameters
-                }
-                
-            };
-            
-        }
+
+
 
         return old;
     }
     else{               // if old is null, then return empty object {}
         return {
             localdb: {
-                current: "", 
+                currentTemplate: "", 
                 data: {
                     templates:[],
                     contracts:[]
-                }}
+                },
+                currentContract: {
+                    uuid: "",
+                    nameKey: "",
+                    content: {
+                        head: {},
+                        body: {}
+                    }
+                }
             }
+        }
 
 
     }

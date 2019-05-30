@@ -47,11 +47,12 @@
 .btn {
   display: inline-block;
   border: none;
-  background: rgb(131, 182, 241);
+  background: #558cf3;
   color: #fff;
-  padding: 10px, 10px, 10px, 10px;
+  padding: 15px, 10px, 10px, 10px;
   cursor: pointer;
   float: right;
+  font-size: calc(8px + 1.2vmin);
 }
 
 
@@ -82,4 +83,12 @@
 
 .cell2 {
   flex: 1 1 auto;
+}
+
+.borderLine {
+  border-color: coral;
+  background-color: #629ff3;
+  color: #f2f4f7;
+  border: 10px;
+  border-color: #1376d8;
 }

@@ -6,7 +6,7 @@ export default class Template extends Component {
     buildRadioButtons(arr, type, id) {
         return arr.map((choice, i) => {
           return (
-            <div key={i}>
+            <div key={i} onChange={this.onChange}>
               <input
               type={type}
               name={id}
@@ -18,7 +18,26 @@ export default class Template extends Component {
       })
      }
     
-     
+     onChange = (e) => {
+        console.log(e.target.name, e.target.value);
+
+        if(this.props.onEvent){
+            this.props.onEvent({
+                type: 'setContractProperty',
+                parameters: { key: e.target.name, value: e.target.value }
+            });
+        }
+    } 
+
+    onSubmit = (e) => {
+        e.preventDefault();
+
+        if(this.props.onEvent){
+            this.props.onEvent({
+                type: 'saveContract'
+            });
+        }
+      }
 
     render() {
         if(!this.props.template.content){
@@ -58,7 +77,7 @@ export default class Template extends Component {
                     return (
                         <div key={item.code} style={formStyleA}>
                             <label>{partI}
-                                <input type="text" name={varName} placeholder={varNote}></input>
+                                <input type="text" name={varName} placeholder={varNote} onChange={this.onChange}></input>
                             </label>
                             <br />
                         </div>
@@ -69,7 +88,7 @@ export default class Template extends Component {
                         <div style={formStyleA}>
                             <label>{partI}
                                 <br />
-                                <textarea name={varName} placeholder={varNote}>
+                                <textarea name={varName} placeholder={varNote} onChange={this.onChange}>
                                 </textarea>
                                 <br />
                             </label>
@@ -80,7 +99,7 @@ export default class Template extends Component {
                     return (
                         <div style={formStyleA}>
                             <label>{partI}
-                                <input type="checkbox" name={varName} />
+                                <input type="checkbox" name={varName} onChange={this.onChange} />
                             </label>
                         </div>
                     )
@@ -89,7 +108,7 @@ export default class Template extends Component {
                     return (
                         <div style={formStyleA}>
                             <label>{partI}
-                                <input type="date" name={varName}></input>
+                                <input type="date" name={varName} onChange={this.onChange}></input>
                             </label>
                         
                         </div>
@@ -116,20 +135,60 @@ export default class Template extends Component {
         }
 
         return (
-            <div style={formStyleB}>
-                {items}
+            <div>
+                <div className="borderLine" >
+                    <label style={labelA}>Template: </label>
+                    <label>{this.props.template.id}</label>
+                </div>
+                <div style={labelRight}>
+                    <input style={inputMargin} type="textbox" name='contractName'  onChange={this.onChange} placeholder="contract name...">
+                    </input>
+                    <input type="submit" 
+                            value="Save Contract" 
+                            className="btn" onClick={this.onSubmit}>
+                    </input>
+                </div>
+
+                <div style={formStyleB}>
+                    {items}
+                </div>
             </div>
         )
 
     }
+
+
 }
+
+
+const inputMargin = {
+    margin: "0px 20px 5px 5px"
+  };
+
+const labelRight = {
+    padding: '10px 10px 10px 10px',
+    float: 'right',
+    backgroundColor: '#b4d0f7',
+  };
+
+const labelA = {
+    padding: '5px 20px'
+  };
 
 const formStyleA = {
     padding: '5px 10px'
   };
 
 const formStyleB = {
-    backgroundColor: '#7b7e82',
+    backgroundColor: '#e8eff9',
     padding: '5px 10px',
-    color: '#fff'
+    color: '#000'
   };
+
+const selected = {
+    backgroundColor: '#b4d0f7',
+    padding: '5px 10px',
+    color: '#1376d8',
+    border: '10px',
+    borderColor: '#1376d8'
+};
