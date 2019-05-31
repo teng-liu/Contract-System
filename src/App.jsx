@@ -93,10 +93,12 @@ class App extends Component {
             // }
         }
         else if(e.type === 'saveContract'){
+            console.log(e);
             let action = {
                 type: 'UpsertContractByKey',
                 kind: 'api',
-                status: 'new'
+                status: 'new',
+                parameters: {}
             }
             this.store.redux.dispatch(action);
         }

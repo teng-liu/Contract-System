@@ -36,6 +36,7 @@ export default function rootReducer(old, action) {
         }
         else if(action.type === 'UpsertContractByKey') {
             // insert or update contract by key
+            console.log(action);
             if(action.status === 'succeeded'){
                 return old;
             }

@@ -53,6 +53,7 @@
   cursor: pointer;
   float: right;
   font-size: calc(8px + 1.2vmin);
+  margin: 5px;
 }
 
 

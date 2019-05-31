@@ -30,8 +30,8 @@ export default class Template extends Component {
     } 
 
     onSubmit = (e) => {
-        e.preventDefault();
-
+        //e.preventDefault();
+        console.log('hello');
         if(this.props.onEvent){
             this.props.onEvent({
                 type: 'saveContract'
@@ -143,9 +143,13 @@ export default class Template extends Component {
                 <div style={labelRight}>
                     <input style={inputMargin} type="textbox" name='contractName'  onChange={this.onChange} placeholder="contract name...">
                     </input>
-                    <input type="submit" 
+                    <input type="button" 
                             value="Save Contract" 
                             className="btn" onClick={this.onSubmit}>
+                    </input>
+                    <input type="button" 
+                            value="Export to Alfrasco" 
+                            className="btn">
                     </input>
                 </div>
 

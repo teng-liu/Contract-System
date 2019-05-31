@@ -7,16 +7,20 @@ async function callApi(method, url, body) {
     if(method === 'patch'){
         res = await axios.patch(url, body);
     }
+    else if(method === 'put'){
+        res = await axios.put(url, body);
+    }
     else{
         res = await axios({
             method,
             url
         })
     }
+
     return res;
 }
 
-async function processSyncFunction(action) {
+async function processSyncFunction(action, state) {
     if (action.type === 'GetContractList') {
         return await callApi('get', 'http://localhost:9000/api/contracts', null);
     }
@@ -28,10 +32,19 @@ async function processSyncFunction(action) {
         return await callApi('get', `http://localhost:9000/api/contracts/${key}`, null);
     }
     else if(action.type === 'UpsertContractByKey'){
-         let key = action.parameters.id;
         // state -> currentContract -> namekey, content
+        let key = state.localdb.currentContract.nameKey;
+        let content = {'content': state.localdb.currentContract.content};
+        // JSON.stringify(state.localdb.currentContract.content);
 
-        // return await callApi('put', `http://localhost:9000/api/contracts/${key}`, action.parameters.content);
+        // let content = {
+        //     data: {
+        //         tamitest: 'tamitestData'
+        //     }
+        // };
+        
+        console.log(content);
+        return await callApi('put', `http://localhost:9000/api/contracts/${key}`, content);
     }
     else if(action.type === 'select-user'){
         // update 
@@ -52,7 +65,7 @@ let apiMiddleware = (api) => (next) => (action) => {
     if(action.kind === 'api' 
         && action.status === 'new') {
             // call api as promise
-            processSyncFunction(action)
+            processSyncFunction(action, api.getState())
                 .then(
                     response => {
                         // re-dispatch succeeded action
