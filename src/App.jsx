@@ -94,13 +94,19 @@ class App extends Component {
         }
         else if(e.type === 'saveContract'){
             console.log(e);
-            let action = {
-                type: 'UpsertContractByKey',
-                kind: 'api',
-                status: 'new',
-                parameters: {}
+            if(this.state.localdb.currentContract.nameKey !== "") {
+                let action = {
+                    type: 'UpsertContractByKey',
+                    kind: 'api',
+                    status: 'new',
+                    parameters: {}
+                }
+                this.store.redux.dispatch(action);
             }
-            this.store.redux.dispatch(action);
+            else{
+                alert("Please input contract Name");
+            }
+
         }
         else if(e.type === 'setCurrentTemplate'){
             let action = {
@@ -135,8 +141,17 @@ class App extends Component {
                     </div> */}
 
                     <div>
+                        <input type="button" 
+                                name="btn_template_builder"
+                                value="Template Builder" 
+                                className="btnLeft">
+                        </input>
+                    </div>
+                    <br />
+                    <div>
                         <h1>Contract Template List</h1>
                     </div>
+
                     <div>
                         <TemplateList 
                             onEvent={(e)=>this.onEvent(e)} 

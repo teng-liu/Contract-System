@@ -56,6 +56,19 @@
   margin: 5px;
 }
 
+.btnLeft {
+  display: inline-block;
+  border: none;
+  background: #f89c45;
+  color: #fff;
+  padding: 15px, 10px, 10px, 10px;
+  cursor: pointer;
+  float: left;
+  font-size: calc(8px + 1.2vmin);
+  margin: 5px;
+}
+
+
 
 .table {
   display: flex;
@@ -92,4 +105,10 @@
   color: #f2f4f7;
   border: 10px;
   border-color: #1376d8;
+}
+
+input[type=text] {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #000000;
 }
