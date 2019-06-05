@@ -16,10 +16,6 @@ class App extends Component {
         this.state = {
             localdb: {
                 currentTemplate: "", 
-                data: {
-                    templates:[],
-                    contracts:[]
-                },
                 currentContract: {
                     uuid: "",
                     nameKey: "",
@@ -27,6 +23,11 @@ class App extends Component {
                         head: {},
                         body: {}
                     }
+                },
+                data: {
+                    templates:[],
+                    contracts:[],
+                    codetables: {}
                 }
             }
         }
@@ -66,7 +67,7 @@ class App extends Component {
     }
   
     onEvent(e) {
-        console.log(e.type);
+        console.log(e);
         if(e.type === 'user-selected'){
             let action = {
                 type: 'select-user',
@@ -111,6 +112,15 @@ class App extends Component {
         else if(e.type === 'setCurrentTemplate'){
             let action = {
                 type: "SetCurrentTemp",
+                parameters: e.parameters
+            }
+            this.store.redux.dispatch(action);
+        }
+        else if(e.type === 'getCodeValue'){
+            let action = {
+                type: 'GetCodeValue',
+                kind: 'api',
+                status: 'new',
                 parameters: e.parameters
             }
             this.store.redux.dispatch(action);
@@ -160,7 +170,8 @@ class App extends Component {
                     <div>
                         <Template 
                             onEvent={(e)=>this.onEvent(e)} 
-                            template={this.state.localdb.currentTemplate}/>
+                            template={this.state.localdb.currentTemplate}
+                            data={this.state.localdb.data}/>
                     </div>
                 </div>
                 )        

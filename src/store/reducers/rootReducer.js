@@ -51,6 +51,31 @@ export default function rootReducer(old, action) {
                 
             };
         }
+        else if(action.type === 'GetCodeValue'){
+
+            if(action.status === 'succeeded'){
+                let code = action.response.data;
+                //console.log(code);
+                console.log(old);
+                let codeName= code.name_key;
+                let codeValue= code.content;
+    
+                return {
+                    ...old,
+                    localdb: {
+                        ...old.localdb,
+                        data: {
+                            ...old.localdb.data,
+                            codetables: {
+                                ...old.localdb.data.codetables,
+                                [codeName]: codeValue
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
         else if(action.type === 'UpdateContractAttribute'){     // update contract -> attributes, name, template-key
             if(action.parameters.key === 'contractName'){
                 return {
@@ -119,10 +144,6 @@ export default function rootReducer(old, action) {
         return {
             localdb: {
                 currentTemplate: "", 
-                data: {
-                    templates:[],
-                    contracts:[]
-                },
                 currentContract: {
                     uuid: "",
                     nameKey: "",
@@ -130,6 +151,11 @@ export default function rootReducer(old, action) {
                         head: {},
                         body: {}
                     }
+                },
+                data: {
+                    templates:[],
+                    contracts:[],
+                    codetables:{}
                 }
             }
         }

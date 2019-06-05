@@ -46,18 +46,12 @@ async function processSyncFunction(action, state) {
         console.log(content);
         return await callApi('put', `http://localhost:9000/api/contracts/${key}`, content);
     }
-    else if(action.type === 'select-user'){
-        // update 
-        let name = 'itss-control-approval-sheet';
-        let param = {
-            data: {
-                selected: action.parameters.id
-            }
-        };
-        return await callApi('patch', `http://localhost:9000/api/contracts/${name}`, param);
+    else if(action.type === 'GetCodeValue'){
+        let code = action.parameters.codeName;
+        return await callApi('get', `http://localhost:9000/api/codetables/${code}`, null);
     }
     else {
-        throw 'no such action type'
+        throw 'no such action type';
     }
 }
 

@@ -1,5 +1,7 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+//import Tokenizr from 'Tokenizr';
 
+let Tokenizr = require('tokenizr');
 
 export default class Template extends Component {
 
@@ -37,9 +39,70 @@ export default class Template extends Component {
         }
       }
 
+    getCodeValue = (db_infor) => {
+        if(this.props.onEvent){
+            this.props.onEvent({
+                type: 'getCodeValue',
+                parameters: { table: db_infor.table, codeName: db_infor.codeName}
+            });
+        }
+    }
+
+    parse_tag(s) {
+        console.log(">>>parsing tag>>> ", s);
+        let list = s.split('::');
+
+        let varName = list[0];
+        let varCompType = list[1];
+        let varNote = list[2];
+        let varCompStyle = list[3];
+
+        let tag = {
+            var_name: varName,
+            var_comp_type: varCompType,
+            var_note: varNote,
+            var_comp_style: varCompStyle,
+            type: 'variable'
+        }
+
+        return tag;
+    }
+
+    split_apart(str) {
+        if((typeof str) !== 'string'){
+            console.log('tokenizr: invalid string!', str);
+            return null;
+        }
+
+        let arr;
+        try{
+            let lexer = new Tokenizr();
+
+            lexer.rule(/\$\{([^\{\}]+)\}/, (ctx, match) => {
+                ctx.accept(
+                    "tag", this.parse_tag(match[1])
+                    )
+            });
+    
+            //lexer.rule(/(?:\$$|$[^\[]|[^\$\[\]])+/, (ctx, match) => {
+            lexer.rule(/(?:\$$|\$[^\{]|[^\$\{\}])+/, (ctx, match) => {
+                ctx.accept("text")
+            });
+    
+            lexer.input(str);
+            arr = lexer.tokens();
+        }
+        catch(e) {
+            console.log(e);
+            console.log('>>> Error from: ', str);
+        }
+
+        return arr;
+    }
+
       // header is array
     displayComponent(header) {
-        
+
         let lines;
         if(header){
             lines = header.map((line, i) => {
@@ -51,91 +114,112 @@ export default class Template extends Component {
                     return (<div></div>);
                 }
 
+                let fieldItems = this.split_apart(line.field);
+                if(fieldItems){
+                    console.log('---------------------------');
+                    console.log(fieldItems);
+                }
 
-                let i1 =  line.field.indexOf("$[");
-                let partI =  line.field.slice(0, i1);
-                let i2 =  line.field.indexOf("]");
-                let vars =  line.field.slice(i1+2, i2);
-                let partII = line.field.slice(i2+1);
+                let row;
+                row = fieldItems.map( (item, j) => {
+                    console.log(item);
+                    if(item.type === 'tag'){
+                        // variable infor => item.value.var_comp_type
+                        let varName = item.value.var_name; 
+                        let varType = item.value.var_comp_type;
+                        let varNote = item.value.var_note;
+                        let varStyle = item.value.var_comp_style;
 
-                // analysis the vars   var-name::type::display
-                let varInfor = vars.split("::");
-                let varName = varInfor[0]; 
-                let varType = varInfor[1];
-                let varNote = varInfor[2];
 
-                if(varType === "textinput"){
-                    return (
-                        <div key={line.code} style={formStyleA}>
-                            <label>
-                                {partI}
+                        if(varType === "textinput"){
+                            return (
                                 <input type="text" name={varName} placeholder={varName} onChange={this.onChange}></input>
-                                {partII}
-                            </label>
-                            <br />
-                        </div>
-                    )
-                }
-                else if(varType === "textarea"){
-                    return (
-                        <div style={formStyleA}>
-                            <label>
-                                {partI}
-                                <textarea name={varName} placeholder={varNote} onChange={this.onChange}>
-                                </textarea>
-                                {partII}
-                            </label>
-                        </div>
-                    )
-                }
-                else if(varType === "checkbox"){
-                    return (
-                        <div style={formStyleA}>
-                            <label>
-                                {partI}
+                            )
+                        }
+                        else if(varType === "textarea"){
+                            return (
+                                <textarea name={varName} placeholder={varNote} onChange={this.onChange}></textarea>
+                            )
+                        }
+                        else if(varType === "checkbox"){
+                            return (
                                 <input type="checkbox" name={varName} onChange={this.onChange} />
-                                {partII}
-                            </label>
-                        </div>
-                    )
-                }
-                else if(varType === "calander"){
-                    return (
-                        <div style={formStyleA}>
-                            <label>
-                                {partI}
+                            )
+                        }
+                        else if(varType === "singleselection"){
+                            let values = varNote.split(",");
+        
+                            return (
+                                this.buildRadioButtons(values, "radio", varName)
+                            )
+                        }
+                        else if(varType === "calander"){
+                            return (
                                 <input type="date" name={varName} onChange={this.onChange}></input>
-                                {partII}
-                            </label>
+                            )
+                        }
+                        else if(varType === "multipleselection" || varType === "dropdownlist"){
+                          //  ${partB-province::dropdownlist::VVV:codetable:province}
+                          if(varNote.toUpperCase().includes("VVV")){
+                            let db_info = varNote.split(":");
+                            let table = db_info[1];
+                            let codeName = db_info[2];
+
+                            // console.log(this.props.data.codetables[codeName]);
+
+                            if(this.props.data.codetables[codeName]){
+                                // display dropdownlist
+                                //if()
+                                console.log(this.props.data.codetables[codeName]);
+                            }
+                            else{
+                                let parameters = {
+                                  table: table,
+                                  codeName: codeName
+                                };
+                                this.getCodeValue(parameters);
+                            }
+                          }
+
+                          return (
+                              <select>
+                                  
+                              </select>
+                          );
+
+
                         
-                        </div>
-                    )
-                }
-                else if(varType === "singleselection"){
-                    let values = varNote.split(",");
+                        }
+                        else{
+                            // line.field
+                            return (
+                                <div style={formStyleA}>
+                                    {/* <label>{line.field}
+                                    </label> */}
+                                </div>
+                            )
+                        }
 
-                    return (
-                        <div style={formStyleA}>
+
+
+                    } // end of if -> tag
+                    else if(item.type === 'text'){
+                        // display as label
+                        return (
                             <label>
-                                {partI}
-                                {this.buildRadioButtons(values, "radio", varName)}
-                                {partII}
+                                {item.value}
                             </label>
-                        </div>
-                    )
-                }
-                else if(varType === "multipleselection" || varType === "dropdownbox"){
+                        );
+                    }
 
-                }
-                else{
-                    // line.field
-                    return (
-                        <div style={formStyleA}>
-                            <label>{line.field}
-                            </label>
-                        </div>
-                    )
-                }
+                });
+
+                return (
+                    <div>
+                        {row}
+                    </div>
+                );
+
             })
         }
 

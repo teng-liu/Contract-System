@@ -108,7 +108,11 @@
 }
 
 input[type=text] {
-  background: transparent;
+  background: rgb(247, 247, 206);
   border: none;
   border-bottom: 1px solid #000000;
+}
+
+input[type=date] {
+  background: rgb(247, 247, 206);
 }
