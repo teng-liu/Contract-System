@@ -27,7 +27,9 @@ class App extends Component {
                 data: {
                     templates:[],
                     contracts:[],
-                    codetables: {}
+                    codetables: {},
+                    definitions:{}
+                    
                 }
             }
         }
@@ -125,6 +127,14 @@ class App extends Component {
             }
             this.store.redux.dispatch(action);
         }
+        else if(e.type === 'getDefinitions'){
+            let action = {
+                type: 'GetDefinitions',
+                kind: 'api',
+                status: 'new'
+            }
+            this.store.redux.dispatch(action);
+        }
 
     }
 
@@ -171,7 +181,8 @@ class App extends Component {
                         <Template 
                             onEvent={(e)=>this.onEvent(e)} 
                             template={this.state.localdb.currentTemplate}
-                            data={this.state.localdb.data}/>
+                            codetables={this.state.localdb.data.codetables}
+                            definitions={this.state.localdb.data.definitions}/>
                     </div>
                 </div>
                 )        

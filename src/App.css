@@ -116,3 +116,6 @@ input[type=text] {
 input[type=date] {
   background: rgb(247, 247, 206);
 }
+select {
+  background: rgb(247, 247, 206);
+}

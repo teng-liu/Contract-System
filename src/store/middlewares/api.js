@@ -50,6 +50,9 @@ async function processSyncFunction(action, state) {
         let code = action.parameters.codeName;
         return await callApi('get', `http://localhost:9000/api/codetables/${code}`, null);
     }
+    else if(action.type === 'GetDefinitions'){
+        return await callApi('get', `http://localhost:9000/api/definitions`, null);
+    }
     else {
         throw 'no such action type';
     }

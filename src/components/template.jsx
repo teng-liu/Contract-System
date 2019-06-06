@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 //import Tokenizr from 'Tokenizr';
+import DropDownBox from './dropDownBox';
+import Definitions from './definitions';
 
 let Tokenizr = require('tokenizr');
 
@@ -39,17 +41,10 @@ export default class Template extends Component {
         }
       }
 
-    getCodeValue = (db_infor) => {
-        if(this.props.onEvent){
-            this.props.onEvent({
-                type: 'getCodeValue',
-                parameters: { table: db_infor.table, codeName: db_infor.codeName}
-            });
-        }
-    }
+
 
     parse_tag(s) {
-        console.log(">>>parsing tag>>> ", s);
+        // console.log(">>>parsing tag>>> ", s);
         let list = s.split('::');
 
         let varName = list[0];
@@ -110,19 +105,14 @@ export default class Template extends Component {
                 // analysis the item, convert to corresponding component
 
                 if(!(line.field)){
-                    console.log("null");
-                    return (<div></div>);
+                    return (<h4>{line.title}</h4>);
                 }
 
-                let fieldItems = this.split_apart(line.field);
-                if(fieldItems){
-                    console.log('---------------------------');
-                    console.log(fieldItems);
-                }
+                let fieldItems = this.split_apart(line.field);      //tokenizr
 
                 let row;
                 row = fieldItems.map( (item, j) => {
-                    console.log(item);
+                    // console.log(item);
                     if(item.type === 'tag'){
                         // variable infor => item.value.var_comp_type
                         let varName = item.value.var_name; 
@@ -160,35 +150,14 @@ export default class Template extends Component {
                         }
                         else if(varType === "multipleselection" || varType === "dropdownlist"){
                           //  ${partB-province::dropdownlist::VVV:codetable:province}
-                          if(varNote.toUpperCase().includes("VVV")){
-                            let db_info = varNote.split(":");
-                            let table = db_info[1];
-                            let codeName = db_info[2];
 
-                            // console.log(this.props.data.codetables[codeName]);
-
-                            if(this.props.data.codetables[codeName]){
-                                // display dropdownlist
-                                //if()
-                                console.log(this.props.data.codetables[codeName]);
-                            }
-                            else{
-                                let parameters = {
-                                  table: table,
-                                  codeName: codeName
-                                };
-                                this.getCodeValue(parameters);
-                            }
-                          }
-
+                          let dataSource = {varName, varNote, varStyle};
                           return (
-                              <select>
-                                  
-                              </select>
-                          );
-
-
-                        
+                            <DropDownBox name={varName} codetables={this.props.codetables} 
+                                            dataSource={dataSource} 
+                                            onEvent={(e)=>this.props.onEvent(e)}
+                                            onChange={this.onChange}></DropDownBox>
+                            );
                         }
                         else{
                             // line.field
@@ -205,17 +174,48 @@ export default class Template extends Component {
                     } // end of if -> tag
                     else if(item.type === 'text'){
                         // display as label
-                        return (
-                            <label>
-                                {item.value}
-                            </label>
-                        );
+                        let text = item.value;
+                        let style;
+                        if(item.value.includes("###")){
+                            let i = item.value.indexOf("###");
+                            let i1 = item.value.indexOf("####");
+                            text = item.value.slice(0, i);
+                            style = item.value.slice(i+1, i1);
+                            // console.log(style);
+                        }
+
+                        if(style){
+                            if(style.includes('center')){
+                                return (
+                                    <div style={labelCenter}>
+                                        <label style={labelCenter}>
+                                            {text}
+                                        </label>
+                                    </div>  
+                                );
+                            }
+                            else if(style.includes('right')){
+                                return (
+                                    <div style={labelDisplayRight}>
+                                        <label style={labelDisplayRight}>
+                                            {text}
+                                        </label>
+                                    </div>  
+                                );
+                            }
+                        }else{
+                            return (
+                                <label>
+                                    {text}
+                                </label>
+                            );
+                        }
                     }
 
                 });
 
                 return (
-                    <div>
+                    <div style={divPadding}>
                         {row}
                     </div>
                 );
@@ -226,20 +226,36 @@ export default class Template extends Component {
         return lines;
     }
 
+    displayDefinitions(defines) {
+        return (
+            <Definitions required={defines} definitions={this.props.definitions} onEvent={(e)=>this.props.onEvent(e)}></Definitions>
+            );
+    }
 
     render() {
         if(!this.props.template.content){
             console.log(this.props.template.content);
             return (<div></div>);
         }
-        let roles = this.props.template.content.body;
-        console.log(roles);
 
-        let header = this.props.template.content.body.header;
-        let headerItems = this.displayComponent(header);
+        let headerItems;
+        if(this.props.template.content.body.header){
+            let header = this.props.template.content.body.header;
+            headerItems = this.displayComponent(header);
+        }
 
-        let payment = this.props.template.content.body.payments;
-        let paymentItems = this.displayComponent(payment);
+        let definedItems;
+        if(this.props.template.content.body.definitions){
+            let defineList = this.props.template.content.body.definitions;
+            definedItems = this.displayDefinitions(defineList);
+        }
+
+        let paymentItems;
+        if(this.props.template.content.body.payments){
+            let payment = this.props.template.content.body.payments;
+            paymentItems = this.displayComponent(payment);
+        }
+
 
        // return (<div></div>);
 
@@ -264,8 +280,8 @@ export default class Template extends Component {
                 </div>
 
                 <div style={formStyleB}>
-                    {/* {items} */}
                     {headerItems}
+                    {definedItems}
                     {paymentItems}
                 </div>
             </div>
@@ -287,6 +303,23 @@ const labelRight = {
     backgroundColor: '#b4d0f7',
   };
 
+const divPadding = {
+    padding: '5px 5px 5px 5px',
+};
+
+const labelCenter = {
+  padding: '1px 1px 1px 1px',
+  float: 'center',
+  backgroundColor: '#dbe8fc',
+  textAlign: 'center'
+};
+
+const labelDisplayRight = {
+    padding: '1px 1px 1px 1px',
+    backgroundColor: '#dbe8fc',
+    textAlign: 'right'
+  };
+
 const labelA = {
     padding: '5px 20px'
   };
@@ -296,7 +329,7 @@ const formStyleA = {
   };
 
 const formStyleB = {
-    backgroundColor: '#e8eff9',
+    backgroundColor: '#f4f8ff',
     padding: '5px 10px',
     color: '#000'
   };

@@ -55,8 +55,6 @@ export default function rootReducer(old, action) {
 
             if(action.status === 'succeeded'){
                 let code = action.response.data;
-                //console.log(code);
-                console.log(old);
                 let codeName= code.name_key;
                 let codeValue= code.content;
     
@@ -74,7 +72,29 @@ export default function rootReducer(old, action) {
                     }
                 }
             }
+        }
+        else if(action.type === 'GetDefinitions'){
+            if(action.status === 'succeeded'){
+                console.log(action.response.data.definition);
 
+                let defines = {};
+                action.response.data.definition.forEach(function(define) {
+                    defines[define.name_key] = define.content.body;
+                });
+
+                console.log(defines);
+
+                return {
+                    ...old,
+                    localdb: {
+                        ...old.localdb,
+                        data: {
+                            ...old.localdb.data,
+                            definitions: defines
+                        }
+                    }
+                }
+            }
         }
         else if(action.type === 'UpdateContractAttribute'){     // update contract -> attributes, name, template-key
             if(action.parameters.key === 'contractName'){
@@ -155,7 +175,8 @@ export default function rootReducer(old, action) {
                 data: {
                     templates:[],
                     contracts:[],
-                    codetables:{}
+                    codetables:{},
+                    definitions:{}
                 }
             }
         }
