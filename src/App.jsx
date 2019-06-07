@@ -6,6 +6,11 @@ import Store from './store';
 import ContractControl from './components/contractControl';
 import TemplateList from './components/templateList';
 import Template from './components/template';
+import contract from './contract.png';
+import template from './template.png';
+import settings from './settings.png';
+import home from './home.jpg';
+import itss from './itss.png';
 
 class App extends Component {
 
@@ -141,49 +146,67 @@ class App extends Component {
     render(){
         if (this.state) {
             return (
-                <div>
-                    <div className="App-header">
-                        <h1>Contract Management System</h1>
+                <div className="grid">
+                    <div className="logo">
+                        <img src={itss} className="img-logo"></img>
+                    </div>
+                    <div className="title">
+                        <h1>ITSS Contract Management System</h1>
                     </div>
 
                     {/* <div>
-                        <TemplateHeader lines={this.state.data.body}/>
-                    </div>
-                    <div>
-                        <h1>React, Redux example</h1>
-                        <ExampleComponent 
-                            data={this.state.data.data} 
-                            onEvent={(e)=>this.onEvent(e)} />
-                    </div>
-                    <div>
-                        <h1>IT SHARED SERVICES CONTRACT/AGREEMENT APPROVAL</h1>
-                        <ContractControl roles={this.state.data.roles}/>
-                    </div> */}
-
-                    <div>
                         <input type="button" 
                                 name="btn_template_builder"
                                 value="Template Builder" 
                                 className="btnLeft">
                         </input>
                     </div>
-                    <br />
+                    <br /> */}
+
+                    <div className="nav">
                     <div>
-                        <h1>Contract Template List</h1>
+                            <button className="img-btn" title="Home panel">
+                                <img src={home} className="img-normal"></img>
+                            </button>
+                        </div>
+                        <div>
+                            <button className="img-btn" title="Contract">
+                                <img src={contract} className="img-normal"></img>
+                            </button>
+                        </div>
+                        <div>
+                            <button className="img-btn" title="Contract Template">
+                                <img src={template} className="img-normal"></img>
+                            </button>
+                        </div>
+                        <div>
+                            <button className="img-btn" title="Settings - Role Configuration">
+                                <img src={settings} className="img-normal"></img>
+                            </button>
+                        </div>
+                    </div>
+                    <div className="propsheader">
+                        <div>here will display the informations of contract/templat</div>
                     </div>
 
-                    <div>
-                        <TemplateList 
-                            onEvent={(e)=>this.onEvent(e)} 
-                            templateList={this.state.localdb.data.templates}/>
+                    <div className="templateList">
+                        <div>
+                            <h2 className="h2Color">Contract Template List</h2>
+                        </div>
+                        <div>
+                            <TemplateList 
+                                onEvent={(e)=>this.onEvent(e)} 
+                                templateList={this.state.localdb.data.templates}/>
+                        </div>
                     </div>
-                    <div>
+                    <div className="template">
                         <Template 
                             onEvent={(e)=>this.onEvent(e)} 
                             template={this.state.localdb.currentTemplate}
                             codetables={this.state.localdb.data.codetables}
                             definitions={this.state.localdb.data.definitions}/>
                     </div>
+                    <div className="footer">I am footer...</div>
                 </div>
                 )        
         }

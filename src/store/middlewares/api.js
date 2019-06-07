@@ -37,12 +37,6 @@ async function processSyncFunction(action, state) {
         let content = {'content': state.localdb.currentContract.content};
         // JSON.stringify(state.localdb.currentContract.content);
 
-        // let content = {
-        //     data: {
-        //         tamitest: 'tamitestData'
-        //     }
-        // };
-        
         console.log(content);
         return await callApi('put', `http://localhost:9000/api/contracts/${key}`, content);
     }

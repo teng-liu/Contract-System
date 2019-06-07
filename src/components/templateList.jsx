@@ -27,7 +27,7 @@ export default class TemplateList extends Component {
 
         return (
             <div>
-                <ul>
+                <ul className="ulNoBullets">
                     {listItems}
                 </ul>
                 
