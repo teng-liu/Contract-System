@@ -13,12 +13,12 @@ export default class TemplateList extends Component {
     }
 
     render() {
-        // const listData = ['aaa', 'bbb', '0000', 'aaera', 'btwebb'];
         const listData = this.props.templateList;
 
         const listItems = listData.map((item) => { 
-            return (<li key={item.uuid} 
-                        style={normal} 
+            return (<li className={`ulNoBullets${this.props.currentTemp === item.name_key ? ' selected' : ''}`}
+                        key={item.name_key} 
+                        style={item.name_key === this.props.currentTemp ? selected: normal} 
                         onClick={() => this.select(item)}>
                         {item.name_key}
                     </li>);

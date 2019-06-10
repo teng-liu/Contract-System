@@ -5,14 +5,13 @@
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr 150px 400px 800px 1fr;
-  grid-template-rows: 100px 20px 200px 800px auto;
+  grid-template-columns: 65px 1fr;
+  grid-template-rows: 100px 50px 1fr 1fr;
   grid-template-areas:
-  ". logo title title ."
-  ". . . . ."
-  ". nav templateList propsheader ."
-  ". nav templateList template ."
-  ". footer footer footer .";
+  "logo title"
+  "nav templateList"
+  "nav templateList"
+  "footer footer";
 }
 
 .logo{
@@ -202,6 +201,26 @@ select {
   list-style: none;
 }
 
+.ulNoBullets:hover, .ulNoBullets.selected {
+  background: rgb(188, 210, 243);
+  color: rgb(61, 60, 60);
+  cursor: pointer;
+}
+
 .h2Color {
   color: rgb(42, 98, 172);
+}
+
+@media screen and (min-width: 736px) {
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 150px 400px 800px 1fr;
+    grid-template-rows: 100px 20px 200px 800px auto;
+    grid-template-areas:
+    ". logo title title ."
+    ". . . . ."
+    ". nav templateList templateList ."
+    ". nav templateList templateList ."
+    ". footer footer footer .";
+  }
 }

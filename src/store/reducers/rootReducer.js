@@ -5,6 +5,15 @@ export default function rootReducer(old, action) {
         if(action.type === 'reset'){
             return action.parameters.state;  
         }
+        else if(action.type === 'SetCurrentTab') {
+            return {
+                ...old,
+                localdb: {
+                    ...old.localdb,
+                    currentTab: action.parameters
+                }
+            }
+        }
         else if (action.type === 'GetContractList') {       // get all contracts - list
             if (action.status === 'succeeded') {
                 return {
@@ -172,6 +181,7 @@ export default function rootReducer(old, action) {
                         body: {}
                     }
                 },
+                currentTab: "",
                 data: {
                     templates:[],
                     contracts:[],
